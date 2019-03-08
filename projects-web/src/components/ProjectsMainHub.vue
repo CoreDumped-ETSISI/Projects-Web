@@ -1,19 +1,18 @@
 <template>
     <b-container>
-      <ProjectDisplay/>
+        <ProjectList/>
     </b-container>
 </template>
 
 <script>
-import ProjectDisplay from '@/components/ProjectDisplay.vue'
-
+import ProjectList from '@/components/ProjectList.vue'
 export default {
   name: 'ProjectsMainHub',
   props: {
     msg: String
   },
   components: {
-    ProjectDisplay
+    ProjectList
   }
 }
 </script>

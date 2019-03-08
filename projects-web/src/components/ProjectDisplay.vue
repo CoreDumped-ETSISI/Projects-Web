@@ -8,7 +8,7 @@
                     </b-col>
                     <b-col></b-col>
                     <b-col>
-                        <h3>3</h3>
+                        <h3>{{participants}}</h3>
                     </b-col>
                 </b-row>
                 <b-row  class="SecR">
@@ -37,11 +37,14 @@
 
 <script>
 export default {
+    name: 'ProjectDisplay',
     data() {
       return {
         progress: 45,
         description: 'EPICIDAD3EPICIDAD3EPPICIDD3EPICIDAIDAD3EPICIDAD3EPICIDAD3EPICIDAD3',
-        title: 'Epicidad'
+        title: 'Epicidad',
+        participants: '5',
+        max: 100,
       }
     }
 }
