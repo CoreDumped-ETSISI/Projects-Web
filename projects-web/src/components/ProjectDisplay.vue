@@ -4,29 +4,30 @@
             <b-container class="ProjectDisplayContainer">
                 <b-row class="FirstR">
                     <b-col cols="6">
-                        <h3 class="ProjectDisplayTitle">{{title}}</h3>
+                        <a class="ProjectDisplayTitleRef" href=""><h3 id="ProjectDisplayTitle" class="ProjectDisplayTitle">{{project.name}}</h3></a>
                     </b-col>
                     <b-col></b-col>
                     <b-col>
-                        <h3>{{participants}}</h3>
+                        <h3 class="ProjectDisplayDParticipantText">Participantes: {{project.users.length}}</h3>
                     </b-col>
                 </b-row>
-                <b-row  class="SecR">
+                <b-row class="SecR">
                     <b-col cols="8">
                         <b-textarea
                             class="textarea1"
                             rows="8"
-                            plaintext :value="description"
+                            plaintext :value="project.description"
                         />
                     </b-col>
                     <b-col cols="4">
                         <font-awesome-icon class="ProjectDisplayDeleteIcon" icon="trash"/>
+                        <h3 class="ProjectDisplayDeleteText">DELETE</h3>
                     </b-col>
                 </b-row>
                 <b-row  class="ThirdR">
                     <b-col>
                         <b-progress class="mt-2" :max="max" show-value>
-                            <b-progress-bar :value="progress" class="ProjectDisplayProgressBar"/>
+                            <b-progress-bar :value="project.progress" class="ProjectDisplayProgressBar"/>
                         </b-progress>
                     </b-col>
                 </b-row>
@@ -40,12 +41,23 @@ export default {
     name: 'ProjectDisplay',
     data() {
       return {
-        progress: 45,
-        description: 'EPICIDAD3EPICIDAD3EPPICIDD3EPICIDAIDAD3EPICIDAD3EPICIDAD3EPICIDAD3',
-        title: 'Epicidad',
-        participants: '5',
         max: 100,
       }
+    },
+    props: {
+        project: {
+            type: Object,
+        }
+    },
+        
+    methods: {
+
+    },
+    beforeMount() {
+         
+    },
+    mounted() {
+        
     }
 }
 </script>
@@ -67,7 +79,11 @@ export default {
 
 }
 .ProjectDisplayTitle {
-    text-align: center;
+    text-align: left;
+    cursor: pointer;
+    font-weight: bold;
+    color: black;
+    margin: 0;
 }
 .ProjectDisplayJumbotron {
     background-color: #F2F2F2;
@@ -79,12 +95,27 @@ export default {
 }
 .ProjectDisplayDeleteIcon {
     position: relative;
-    top: 40%;
-    width: 20% !important;
-    height: 20% !important;
+    margin-top: 48px;
+    width: 30% !important;
+    height: 30% !important;
     color: #0D860F;
+}
+.ProjectDisplayDeleteText {
+    font-size: medium;
+    text-align: center;
+    font-weight: bold;
 }
 .ProjectDisplayProgressBar {
     background-color: #0D860F;
+}
+.ProjectDisplayDParticipantText {
+    text-align: left;
+    font-size: 150%;
+}
+.ProjectDisplayTitleTooltip {
+    align-self: left;
+}
+.ProjectDisplayTitleRef {
+    text-decoration: none !important
 }
 </style>

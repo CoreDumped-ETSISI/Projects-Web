@@ -1,16 +1,18 @@
 <template>
   <div id="app">
-    <ProjectsMainHub msg="Welcome to Your Vue.js App"/>
+    <ProjectCreator/>
   </div>
 </template>
 
 <script>
 import ProjectsMainHub from './components/ProjectsMainHub.vue'
+import ProjectCreator from './components/ProjectCreator.vue'
 
 export default {
   name: 'app',
   components: {
-    ProjectsMainHub
+    ProjectsMainHub,
+    ProjectCreator,
   }
 }
 </script>

@@ -1,18 +1,19 @@
 <template>
     <b-container>
-        <ProjectList/>
+        <ProjectCreatorForm/>
     </b-container>
 </template>
 
 <script>
-import ProjectList from '@/components/ProjectList.vue'
+import ProjectCreatorForm from '@/components/ProjectCreatorForm.vue'
+
 export default {
-  name: 'ProjectsMainHub',
+  name: 'ProjectCreator',
   props: {
-    msg: String
+    
   },
   components: {
-    ProjectList
+    ProjectCreatorForm,
   }
 }
 </script>

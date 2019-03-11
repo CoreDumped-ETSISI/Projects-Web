@@ -1,44 +1,56 @@
 <template>
     <b-container>
-        <b-list-group id="ProjectList">
-        </b-list-group>
+        <div v-if="contentLoaded == true">
+            <b-list-group id="ProjectList" v-for="elem in projs" :key="elem.id">
+                <ProjectDisplay :project="elem"/>
+            </b-list-group>
+        </div>
     </b-container>
 </template>
 
 <script>
 import ProjectDisplay from '@/components/ProjectDisplay.vue'
-import Vue from 'vue'
+import axios from 'axios'
+
+var projects = []; 
+var projectNum;
 
 export default {
     name: 'ProjectList',
     data() {
         return {
             numProjects: 5,
+            projs: [],
+            contentLoaded: false,
         }
     },
     components: {
-
+        ProjectDisplay,
     },
     methods: {
-        createListElem() {
-            var listNode = document.getElementById('ProjectList');
-            for(var i=0; this.numProjects>i; i++){
-                var liGNode = document.createElement("div");
-                liGNode.setAttribute("class", "list-group-item");
-                liGNode.setAttribute("ref", "listGroupItem");
-                
-                var ComponentClass = Vue.extend(ProjectDisplay)
-                var instance = new ComponentClass();
+        createListElem() {  
+            axios
+            .get('http://localhost:3000/project')
+            .then(response =>{
+                response.data.forEach(element => {
+                    projects.push(element);
+                });  
 
-                instance.$mount() // pass nothing
-                liGNode.appendChild(instance.$el)
-
-                listNode.appendChild(liGNode);
-            }
+                projectNum = projects.length;
+                this.numProjects = projectNum;
+                this.projs = projects;
+                this.contentLoaded = true;               
+            });           
         },  
     },
-    mounted() {
+    beforeMount() {
+
+    },
+    mounted() {  
         this.createListElem();
+    },
+    created(){
+
     },
 }
 </script>
