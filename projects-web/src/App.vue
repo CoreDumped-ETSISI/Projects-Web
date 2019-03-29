@@ -1,18 +1,14 @@
 <template>
   <div id="app">
-    <ProjectCreator/>
+    <router-view :key="$route.fullPath"></router-view>
   </div>
 </template>
 
 <script>
-import ProjectsMainHub from './components/ProjectsMainHub.vue'
-import ProjectCreator from './components/ProjectCreator.vue'
-
 export default {
   name: 'app',
   components: {
-    ProjectsMainHub,
-    ProjectCreator,
+    
   }
 }
 </script>

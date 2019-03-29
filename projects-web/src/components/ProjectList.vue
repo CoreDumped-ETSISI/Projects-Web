@@ -1,7 +1,7 @@
 <template>
     <b-container>
         <div v-if="contentLoaded == true">
-            <b-list-group id="ProjectList" v-for="elem in projs" :key="elem.id">
+            <b-list-group id="ProjectList" v-for="elem in projs" :key="elem._id">
                 <ProjectDisplay :project="elem"/>
             </b-list-group>
         </div>
@@ -19,7 +19,7 @@ export default {
     name: 'ProjectList',
     data() {
         return {
-            numProjects: 5,
+            numProjects: 0,
             projs: [],
             contentLoaded: false,
         }
@@ -28,7 +28,9 @@ export default {
         ProjectDisplay,
     },
     methods: {
-        createListElem() {  
+        createListElem() {
+            this.projs = []; 
+            projects = [];
             axios
             .get('http://localhost:3000/project')
             .then(response =>{
@@ -41,16 +43,10 @@ export default {
                 this.projs = projects;
                 this.contentLoaded = true;               
             });           
-        },  
+        },
     },
-    beforeMount() {
-
-    },
-    mounted() {  
+    mounted() {       
         this.createListElem();
-    },
-    created(){
-
     },
 }
 </script>
