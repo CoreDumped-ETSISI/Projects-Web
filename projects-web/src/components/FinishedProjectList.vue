@@ -2,7 +2,7 @@
     <b-container>
         <b-row>
             <b-col cols="12">
-                <h1 class="PageTitle">PROYECTOS ACTIVOS</h1>
+                <h1 class="PageTitle">PROYECTOS TERMINADOS</h1>
             </b-col>
         </b-row>
         <b-row>
@@ -13,7 +13,7 @@
             </b-col>
             <b-col cols="5">
                 <router-link :to="{ path: '/projectcreator'}"><b-button class="addProjectBtn">Crear Proyecto</b-button></router-link>
-                <router-link :to="{ path: '/finishedprojects'}"><b-button class="addProjectBtn">Proyectos Terminados</b-button></router-link>
+                <router-link :to="{ path: '/'}"><b-button class="addProjectBtn">Proyectos Activos</b-button></router-link>
             </b-col>
         </b-row>
         <div v-if="contentLoaded == true">
@@ -28,12 +28,11 @@
 import ProjectDisplay from '@/components/ProjectDisplay.vue'
 import axios from 'axios'
 
-//Variables globales para generar la lista de proyectos
 var projects = []; 
 var projectNum;
 
 export default {
-    name: 'ProjectList',
+    name: 'FinishedProjectList',
     data() {
         return {
             numProjects: 0,
@@ -47,7 +46,7 @@ export default {
         ProjectDisplay,
     },
     methods: {
-        /*Función que hace una llamada GET a la API, permite generar la lista de proyectos no terminados 
+        /*Función que hace una llamada GET a la API, permite generar la lista de proyectos terminados 
         e introduce la información de los proyectos en las tarjetas de 'ProjectDisplay'*/
         createListElem() {
             this.projs = []; 
@@ -57,7 +56,7 @@ export default {
             .get('http://localhost:3000/project')
             .then(response =>{
                 response.data.forEach(element => {
-                    if(!element.completed)
+                    if(element.completed)
                     projects.push(element);
                 });  
 

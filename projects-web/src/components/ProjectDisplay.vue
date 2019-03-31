@@ -44,6 +44,7 @@
 import axios from 'axios'
 import router from '../routes/index.js'
 
+//Variables globales para poder calcular el progreso del proyecto
 var objNum = 0;
 var completedObjs = 0;
 
@@ -62,6 +63,7 @@ export default {
     },
         
     methods: {
+        //Las tres funciones siguientes son los pasos a seguir para eliminar un proyecto con la llamada DELETE a la API
         showModal() {
         this.$refs.deleteModal.show()
         },
@@ -73,6 +75,7 @@ export default {
             this.hideModal();
             location.reload();
         },
+        //Función que calcula según los objetivos cumplidos el progreso que lleva el proyecto
         calculateProgress() {
             completedObjs = 0;
 
@@ -90,6 +93,7 @@ export default {
             }
             
         },
+        //Función que lleva a la página del proyecto donde está toda su información
         toProject() {
             const name = this.project.name;
             router.push({ name: 'ProjectInfo', params: { name } });

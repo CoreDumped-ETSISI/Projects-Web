@@ -66,6 +66,7 @@ export default {
   name: "ProjecCreatorForm",
   data() {
     return {
+      //Variables que se enviarán a la api por una llamada POST
       form: {
         name: "",
         description: "",
@@ -78,6 +79,7 @@ export default {
         documentationUrl: "",
         tagList: []
       },
+      //Variables que introduce el usuario en el form de la página
       textName: "",
       textDescription: "",
       objectives: "",
@@ -89,6 +91,7 @@ export default {
   },
   components: {},
   methods: {
+    //Función que rellena el form de la información introducida por el usuario y hace la petición POST
     onSubmit(evt) {
       evt.preventDefault();
 
@@ -124,8 +127,8 @@ export default {
           this.error = error.response.data.message;
         });
     },
+    //Función que lleva de vuelta a la página principal
     backHome() {
-      //location.reload();
       router.push({ path: "/" });
     }
   }

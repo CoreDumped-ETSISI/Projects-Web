@@ -95,6 +95,7 @@ export default {
             project: {
                 type: Object,
             },
+            //Información que se puede cambiar en el editor
             objectives: [],
             participants: [],
             contentLoaded: false,
@@ -112,6 +113,7 @@ export default {
     
     },
     methods: {
+        //Función que introduce los objetivos en la lista de objetivos generada en el HTML y lo mismo con la lista de participantes
         createObjectiveElem() {  
             axios
             .get('http://localhost:3000/projectname/'+this.$route.params.name)
@@ -132,11 +134,13 @@ export default {
         changeObjectives() {
 
         },  
+        //Función que lleva de vuelta a la página de proyecto
         backToInfo() {
             const name = this.project.name;
             router.push({ name: 'ProjectInfo', params: { name } })
             
         },
+        //Función que actualiza los cambios del proyecto con llamada PUT
         updateProject() {
             var form = {
                 name: this.newName,
@@ -156,8 +160,6 @@ export default {
                     }
             })
             .then(response =>{  
-                
-                //location.reload();
 
                 const name = this.newName;
                 router.push({ name: 'ProjectInfo', params: { name } })
@@ -169,6 +171,7 @@ export default {
             });    
 
         },
+        //Función que elimina usuarios del proyecto
         deleteUser(elem) {
             var index = this.participants.indexOf(elem)
             this.participants.splice(index,1);

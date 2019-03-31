@@ -4,6 +4,10 @@
             <b-button class="mt-3 modalBtn" block @click="deleteProject">Sí, por favor</b-button>
             <b-button class="mt-2 modalBtn" block @click="hideModal">No, gracias</b-button>
         </b-modal>
+        <b-modal ref="finishModal" hide-footer title="¿Quieres terminar el proyecto?">
+            <b-button class="mt-3 modalBtn" block @click="finishProject">Sí, por favor</b-button>
+            <b-button class="mt-2 modalBtn" block @click="hideModal2">No, gracias</b-button>
+        </b-modal>
         <b-row class="ZeroR">
             <b-col cols="6">               
                 <b-button v-on:click="backHome" class="BackBtn">Back</b-button>               
@@ -12,7 +16,7 @@
                 <b-dropdown id="ddown1" text="Opciones" class="m-md-2 dropdownOptions">
                     <b-dropdown-item @click="toEditor">Editar</b-dropdown-item>
                     <b-dropdown-item @click="showModal" style="color: red">Eliminar</b-dropdown-item>
-                    <b-dropdown-item style="color: green">Terminar</b-dropdown-item>
+                    <b-dropdown-item @click="showModal2" style="color: green">Terminar</b-dropdown-item>
                 </b-dropdown>
             </b-col>
         </b-row>
@@ -95,6 +99,7 @@
 import axios from 'axios'
 import router from '../routes/index.js'
 
+//Variables globales para generar la lista de objetivos
 var objNum = 0;
 var completedObjs = 0;
  
@@ -102,11 +107,13 @@ export default {
     name: 'ProjectInfo',
     data() {
         return {
+            //La información del proyecto
             project: {
                 type: Object,
             },
             objectives: [],
             participants: [],
+            completed: false,
             contentLoaded: false,
             max: 100,
             progress: 0,
@@ -116,6 +123,7 @@ export default {
     
     },
     methods: {
+        //Función que introduce los objetivos en la lista de objetivos generada en el HTML y lo mismo con la lista de participantes
         createObjectiveElem() {  
             axios
             .get('http://localhost:3000/projectname/'+this.$route.params.name)
@@ -123,6 +131,7 @@ export default {
                 this.project = response.data;
                 this.objectives = response.data.objectives;
                 this.participants = response.data.users;
+                this.completed = response.data.completed;
                 this.calculateProgress();
                 this.contentLoaded = true;               
             });             
@@ -130,15 +139,17 @@ export default {
         changeObjectives() {
 
         },  
+        //Función que lleva de vuelta a la página principal
         backHome() {
-            //location.reload();
             router.push({ path: '/' });
             
         },
+        //Función que te lleva al editor de proyectos
         toEditor() {
             const name = this.project.name;
             router.push({ name: 'ProjectEditor', params: { name } });
         },
+        //Las tres funciones siguientes son los pasos a seguir para eliminar un proyecto con la llamada DELETE a la API
         showModal() {
         this.$refs.deleteModal.show()
         },
@@ -153,6 +164,7 @@ export default {
             })
             
         },
+        //Función que calcula según los objetivos cumplidos el progreso que lleva el proyecto
         calculateProgress() {
             completedObjs = 0;
 
@@ -167,8 +179,34 @@ export default {
                 this.progress = (completedObjs * this.max)/objNum;
             }else{
                 this.progress = 0;
+            }  
+        },
+        //Las tres funciones siguientes son los pasos a seguir para terminar un proyecto con la llamada PUT a la API
+        showModal2() {
+        this.$refs.finishModal.show()
+        },
+        hideModal2() {
+        this.$refs.finishModal.hide()
+        }, 
+        finishProject() {
+            this.completed = true;
+            var form = {
+                name: this.project.name,
+                completed: this.completed,
             }
-            
+
+            axios
+            .put('http://localhost:3000/projectupdate', form, {
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-type": "application/json",
+                    }
+            })
+            .then(response =>{  
+                this.hideModal();
+                router.push({ path: '/finishedprojects'});
+                
+            })
         },
     },
     mounted() {  
