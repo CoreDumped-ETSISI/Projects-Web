@@ -16,7 +16,7 @@
                 <b-dropdown id="ddown1" text="Opciones" class="m-md-2 dropdownOptions">
                     <b-dropdown-item @click="toEditor">Editar</b-dropdown-item>
                     <b-dropdown-item @click="showModal" style="color: red">Eliminar</b-dropdown-item>
-                    <b-dropdown-item @click="showModal2" style="color: green">Terminar</b-dropdown-item>
+                    <b-dropdown-item v-if="!project.completed" @click="showModal2" style="color: green">Terminar</b-dropdown-item>
                 </b-dropdown>
             </b-col>
         </b-row>
@@ -37,18 +37,24 @@
                     <b-form-textarea class="descriptionText" id="textarea-plaintext" plaintext :value="project.description" rows="10" disabled/>
                 </b-col>
             </b-row>
-            <b-row  class="ThirdR">
+            <b-col cols="12" class="progressBar">
+                <b-progress class="mt-2" :max="max" show-value>
+                    <b-progress-bar :value="progress" class="ProjectDisplayProgressBar"/>
+                </b-progress>
+            </b-col>   
+            <b-row  class="ThirdR">                  
                 <b-col cols="12">
-                    <div v-if="contentLoaded == true" class="objectiveList">                        
-                        <b-form-checkbox
-                        disabled
-                        v-for="elem in objectives" :key="elem.name"
-                        class="objectiveCheckbox"
-                        v-model="elem.completed"
-                        >
-                        {{elem.name}}
-                        </b-form-checkbox>                       
-                    </div>
+                    <b-list-group v-if="contentLoaded == true">
+                        <b-list-group-item v-for="elem in objectives" :key="elem.name" class="objectiveList" >                                           
+                            <b-form-checkbox
+                            disabled
+                            class="objectiveCheckbox"
+                            v-model="elem.completed"
+                            >
+                            {{elem.name}}
+                            </b-form-checkbox>             
+                        </b-list-group-item>
+                    </b-list-group>               
                 </b-col>
             </b-row>
         </b-col>
@@ -79,13 +85,6 @@
                 </b-col>
             </b-row>
         </b-col>
-        </b-row>
-        <b-row>
-            <b-col cols="12">
-                <b-progress class="mt-2" :max="max" show-value>
-                    <b-progress-bar :value="progress" class="ProjectDisplayProgressBar"/>
-                </b-progress>
-            </b-col>
         </b-row>
         <b-row>
             <b-col cols="12">
@@ -271,8 +270,7 @@ export default {
     background-color: #0D860F;
 }
 .objectiveList {
-    margin-top: 12px;
-    margin-bottom: 12px;
+
 }
 .participantsListItem {
     text-align: left;
@@ -285,6 +283,7 @@ export default {
 }
 .ProjectDisplayProgressBar {
     background-color: #0D860F;
+    float: left;
 }
 .modalBtn {
     background-color: #0D860F;
@@ -292,5 +291,8 @@ export default {
 .descriptionText {
     border: 0;
     
+}
+.progressBar {
+    padding: 0%;
 }
 </style>

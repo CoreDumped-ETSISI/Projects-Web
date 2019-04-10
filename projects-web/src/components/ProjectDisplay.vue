@@ -20,8 +20,10 @@
                         />
                     </b-col>
                     <b-col cols="4">
-                        <font-awesome-icon v-on:click="showModal" class="ProjectDisplayDeleteIcon" icon="trash"/>
-                        <h3 class="ProjectDisplayDeleteText">DELETE</h3>
+                        <font-awesome-icon v-if="!project.completed" v-on:click="showModal" class="ProjectDisplayDeleteIcon" icon="trash"/>
+                        <h3 v-if="!project.completed" class="ProjectDisplayDeleteText">DELETE</h3>
+                        <font-awesome-icon v-if="project.completed" v-on:click="toProject" class="ProjectDisplayDeleteIcon" icon="check"/>
+                        <h3 v-if="project.completed" class="ProjectDisplayDeleteText">TERMINADO</h3>
                         <b-modal ref="deleteModal" hide-footer title="¿Quieres borrar el proyecto?">
                             <b-button class="mt-3 modalBtn" block @click="deleteProject">Sí, por favor</b-button>
                             <b-button class="mt-2 modalBtn" block @click="hideModal">No, gracias</b-button>
@@ -130,6 +132,7 @@ export default {
     font-weight: bold;
     color: black;
     margin: 0;
+    word-wrap: break-word;
 }
 .ProjectDisplayJumbotron {
     background-color: #F2F2F2;

@@ -21,7 +21,7 @@
             <p v-if="errorInResponse" class="errorMessage">{{error}}</p>
           </b-col>
         </b-row>
-        <h3>Descripción del proyecto</h3>
+        <h3 class="objectiveTitle">Descripción del proyecto</h3>
         <b-form-textarea
           id="textarea1"
           v-model="textDescription"
@@ -32,15 +32,13 @@
         />
 
         <h3 class="objectiveTitle">Objetivos a cumplir</h3>
-        <p>Sepera los objetivos por comas y sin espacios donde las comas</p>
-        <b-form-textarea
-          id="textarea2"
-          v-model="objectives"
-          required
-          placeholder="Introduce los objetivos del proyecto"
-          rows="6"
-          max-rows="12"
-        />
+        <div v-for="elem in objectives.length" :key="elem.id">
+          <b-row>
+            <b-col cols="12">
+              <b-form-input class="objectiveInput" v-model="objectives[elem]" placeholder="Objetivo"></b-form-input><font-awesome-icon v-if="elem != objectives.length" v-on:click="deleteObjective(elem)" class="objectiveIcon" icon="trash"/>
+            </b-col>
+          </b-row>         
+        </div>     
 
         <h3 class="objectiveTitle">Url de la documentación</h3>
         <b-form-input v-model="textDoc" placeholder="Introduce la url" autocomplete="off"/>
@@ -82,7 +80,8 @@ export default {
       //Variables que introduce el usuario en el form de la página
       textName: "",
       textDescription: "",
-      objectives: "",
+      firstObjective: "",
+      objectives: [],
       textDoc: "",
       textRepo: "",
       errorInResponse: false,
@@ -100,17 +99,16 @@ export default {
       this.form.repository = this.textRepo;
       this.form.documentationUrl = this.textDoc;
 
-      var objectiveArray = [];
       var jsonObjectiveArray = [];
-      objectiveArray = this.objectives.split(",");
 
-      objectiveArray.forEach(element => {
-        var json = {
-          name: element,
-          completed: false
-        };
-
-        jsonObjectiveArray.push(json);
+      this.objectives.forEach(element => {
+        if(element != ""){
+          var json = {
+            name: element,
+            completed: false
+          };
+          jsonObjectiveArray.push(json);
+        }      
       });
 
       this.form.projectOwner = "EPICIDAD";
@@ -130,18 +128,28 @@ export default {
     //Función que lleva de vuelta a la página principal
     backHome() {
       router.push({ path: "/" });
+    },
+    loadFirstObjective(){
+      this.objectives.push(this.firstObjective);
+    },
+    deleteObjective(position) {
+      this.objectives.splice(position,1);
     }
-  }
+  },
+  mounted() {
+    this.loadFirstObjective();
+  }  
 };
 </script>
 
 <style scoped>
 .completeFormButton {
   background-color: #0d860f;
-  margin-top: 2%;
+  margin-top: 4%;
+  margin-bottom: 4%;
 }
 .objectiveTitle {
-  margin-top: 2%;
+  margin-top: 4%;
 }
 .BackBtn {
   float: left;
@@ -153,5 +161,17 @@ export default {
   margin-top: 2%;
   margin-bottom: 2%;
   color: red;
+}
+.objectiveInput {
+  width:60%;
+  float: left;
+}
+.objectiveIcon {
+  margin-top:8px;
+  margin-left:8px;
+  float: left;
+}
+.addBtn {
+  float: left;
 }
 </style>

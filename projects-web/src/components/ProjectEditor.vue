@@ -1,5 +1,13 @@
 <template>
     <b-container>
+        <b-modal ref="objectiveModal" hide-footer title="Añadir Objetivo">
+            <b-form-input v-model="newObjective" placeholder="Introduce objetivo"></b-form-input>
+            <b-button class="mt-2 greenBtn" block @click="addObjective">Añadir</b-button>
+        </b-modal>
+        <b-modal ref="objectiveModal2" hide-footer title="¿Quieres borrar el objetivo?">
+            <b-button class="mt-3 greenBtn" block @click="deleteObjective">Sí, por favor</b-button>
+            <b-button class="mt-2 greenBtn" block @click="hideModal2">No, gracias</b-button>
+        </b-modal>
         <b-row class="ZeroR">
             <b-col cols="12">               
                 <b-button @click="backToInfo" class="BackBtn">Back</b-button>             
@@ -24,15 +32,20 @@
             </b-row>
             <b-row  class="ThirdR">
                 <b-col cols="12">
-                    <div v-if="contentLoaded == true" class="objectiveList">                        
-                        <b-form-checkbox
-                        v-for="elem in newObjectives" :key="elem.name"
-                        class="objectiveCheckbox"
-                        v-model="elem.completed"
-                        >
-                        {{elem.name}}
-                        </b-form-checkbox>                       
-                    </div>
+                    <b-list-group v-if="contentLoaded == true">
+                        <b-list-group-item v-for="elem in objectives" :key="elem.name" class="objectiveList" >                                           
+                            <b-form-checkbox
+                            class="objectiveCheckbox"
+                            v-model="elem.completed"
+                            >
+                            {{elem.name}}
+                            </b-form-checkbox>
+                            <font-awesome-icon v-on:click="showModal2(objectives.indexOf(elem))" class="objectiveIcon" icon="trash"/>             
+                        </b-list-group-item>
+                    </b-list-group>   
+                </b-col>
+                <b-col cols="12">
+                    <b-button v-if="!project.completed" class="addBtn" v-on:click="showModal">Añadir Objetivo</b-button>
                 </b-col>
             </b-row>
         </b-col>
@@ -102,6 +115,8 @@ export default {
             newName: '',
             newDesc: '',
             newObjectives: [],
+            newObjective: '',
+            deleteObjectivePos: 0,
             newParticipants: [],
             newDocUrl: '',
             newRepo: '',
@@ -176,6 +191,58 @@ export default {
             var index = this.participants.indexOf(elem)
             this.participants.splice(index,1);
         },
+        //Función que añade nuevos objetivos
+        addObjective(){
+            var newObj = {
+                name: this.newObjective,
+                completed: false,
+            }
+
+            this.newObjectives.push(newObj);
+
+            var form = {
+                name: this.newName,
+                previousName: this.project.name,
+                description: this.newDesc,
+                objectives: this.newObjectives,
+                users: this.newParticipants,
+                documentationUrl: this.newDocUrl,
+                repository: this.newRepo,
+            }
+
+            axios
+            .put('http://localhost:3000/projectupdate/'+this.$route.params.name, form, {
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-type": "application/json",
+                    }
+            })
+            .then(response =>{  
+                this.hideModal();
+            })
+            .catch(error => {
+
+            });
+        },
+        showModal() {
+            this.$refs.objectiveModal.show()
+        },
+        showModal2(position) {
+            this.deleteObjectivePos = position;
+            this.$refs.objectiveModal2.show();
+        },
+        hideModal() {
+            this.$refs.objectiveModal.hide();
+        },
+        hideModal2() {
+            this.$refs.objectiveModal2.hide();
+        }, 
+        deleteObjective() {
+            var position = this.deleteObjectivePos;
+            this.newObjectives.splice(position,1);
+
+            this.hideModal2();
+        },
     },
     mounted() {  
         this.createObjectiveElem();
@@ -239,8 +306,7 @@ export default {
     background-color: #0D860F;
 }
 .objectiveList {
-    margin-top: 12px;
-    margin-bottom: 12px;
+
 }
 .participantsListItem {
     text-align: left;
@@ -255,5 +321,18 @@ export default {
     color: red;
     margin-top: 5%;
     margin-bottom: 5%;
+}
+.addBtn {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    background-color: #0D860F;
+}
+.greenBtn {
+    background-color: #0D860F;
+}
+.objectiveIcon {
+    float: right;
+    color: #0D860F;
+    cursor: pointer;
 }
 </style>
